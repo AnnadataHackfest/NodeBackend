@@ -24,7 +24,12 @@ const UserSchema = new Schema({
   register_date: {
     type: Date,
     default: Date.now
+  },
+  verified: {
+    type: Boolean,
+    default: false
   }
+
 });
 
 module.exports = User = mongoose.model('user', UserSchema);
