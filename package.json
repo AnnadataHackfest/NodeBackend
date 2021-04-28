@@ -1,32 +1,30 @@
 {
-  "name": "mern_shopping_list",
+  "name": "annadata_backend",
   "version": "1.0.0",
-  "description": "shopping list build with mern-stack",
+  "description": "backend of annadata website and app",
   "main": "server.js",
   "engines": {
     "node": "12.16.3",
     "npm": "6.14.4"
   },
   "scripts": {
-    "client-install": "npm install --prefix client",
     "start": "node server.js",
-    "server": "nodemon server.js",
-    "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "dev": "nodemon server.js",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
-  "author": "yash vardhan",
+  "author": "Team Annadata",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
-    "concurrently": "^5.3.0",
     "config": "^3.3.6",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.12.5"
+    "mongoose": "^5.12.6"
   },
   "devDependencies": {
+    "concurrently": "^6.0.2",
     "nodemon": "^2.0.7"
   }
 }

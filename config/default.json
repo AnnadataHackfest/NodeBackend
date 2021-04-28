@@ -1,4 +1,8 @@
 {
-    "mongoURI": "mongodb+srv://Yash123:Yash123@cluster0.ejszn.gcp.mongodb.net/<dbname>?retryWrites=true&w=majority",
-    "jwtSecret": "sl_myJwtSecret"
-  }
+  "mongoURI": "mongodb+srv://admin:admin@cluster0.x0dcn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+  "jwtSecret": "sl_myJwtSecret",
+  "email": "help.annadata@gmail.com",
+  "password": "DownToEarth@123",
+  "openWeatherApiKey": "5c42af0b7a42f1e2c689800370107b9f",
+  "openWeatherApiUrl": "https://api.openweathermap.org/data/2.5/weather"
+}

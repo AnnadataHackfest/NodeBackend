@@ -20,6 +20,7 @@ mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true, useCreat
 app.use('/api/items', require('./routes/api/items'));
 app.use('/api/users', require('./routes/api/users'));
 app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/weatherForecast', require('./routes/api/weatherForecast'));
 
 // serve static assets if we are in production
 if(process.env.NODE_ENV === 'production'){
