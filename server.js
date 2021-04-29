@@ -1,12 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require("path");
+const fileupload = require('express-fileupload');
 
 const app = express();
 require('dotenv').config();
 
 // Bodyparser middleware
 app.use(express.json());
+
+// fileupload middleware
+app.use(fileupload({
+  useTempFiles: true
+}))
 
 // DB config
 const db = process.env.MONGODB_URL;
@@ -22,6 +28,7 @@ app.use('/api/users', require('./routes/api/users'));
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/weatherForecast', require('./routes/api/weatherForecast'));
 app.use('/api/otp', require('./routes/api/otp'));
+app.use('/api/upload', require('./routes/api/upload'));
 
 // serve static assets if we are in production
 if(process.env.NODE_ENV === 'production'){
