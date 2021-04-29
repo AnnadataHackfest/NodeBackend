@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const axios = require("axios");
 
-require('dotenv').config();
 
 // API keys
 const openWeatherApiKey = process.env.OPEN_WEATHER_API_KEY;
@@ -23,6 +22,7 @@ router.get('/coordinates', (req, res) => {
     })
     .catch(error => {
       console.log('Error occured in Open Weather Api ', error);
+      return res.status(400).json({ msg: 'Error occured in Open Weather Api' });
     });  
 });
 
@@ -40,6 +40,7 @@ router.get('/pincode', (req, res) => {
     })
     .catch(error => {
       console.log('Error occured in Open Weather Api ', error);
+      return res.status(400).json({ msg: 'Error occured in Open Weather Api' });
     });  
 });
 

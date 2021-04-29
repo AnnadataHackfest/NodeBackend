@@ -5,7 +5,6 @@ const auth = require("../../middleware/auth");
 const { randomString } = require('../../utils/utility');
 const User = require('../../models/User');
 
-require('dotenv').config();
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
