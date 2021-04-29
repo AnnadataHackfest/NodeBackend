@@ -31,6 +31,8 @@ app.use('/api/otp', require('./routes/api/otp'));
 app.use('/api/upload', require('./routes/api/upload'));
 app.use('/api/ambeedata', require('./routes/api/ambeedata'));
 
+app.use('/api/questions', require('./routes/api/questions'));
+
 // serve static assets if we are in production
 if(process.env.NODE_ENV === 'production'){
     //set static folder
