@@ -2,13 +2,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require("path");
 const fileupload = require('express-fileupload');
-
+const cors=require('cors');
 const app = express();
 require('dotenv').config();
 
 // Bodyparser middleware
 app.use(express.json());
-
+app.use(cors());
 // fileupload middleware
 app.use(fileupload({
   useTempFiles: true
