@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const cloudinary = require('cloudinary').v2;
-
+const UploadFile = require('../../models/UploadFile');
+const User = require('../../models/User');
+const auth = require("../../middleware/auth"); 
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -9,7 +11,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
-router.post('/', (req, res) => {
+router.post('/', auth, (req, res) => {
   const file = req.files.file;
   console.log(file);
   cloudinary.uploader.upload(file.tempFilePath, { resource_type: "auto" }, function(err, result) {
@@ -22,10 +24,31 @@ router.post('/', (req, res) => {
       console.log("Hosted url is ", result.url);
 
       // TODO Save this URL in database =====================
-
-      res.json({
-        msg: "Successfully uploaded file to cloudinary", 
-        url: result.url
+      const id = req.user.id;
+      console.log("User id is ", id);
+      User.findById(id).exec((err, user) => {
+        if (err || !user) {
+          console.log("Error user not found ", err);
+          return res.status(400).json({ msg: 'Sign in to upload file' });
+        }
+        else {
+          let obj = new UploadFile({
+            fileUrl: result.url,
+          })
+          user.uploadedFiles.push(obj);
+          user.save((err, updatedUser) => {
+            if (err || !updatedUser) {
+              console.log("Error in saving url to database ", err);
+              return res.status(400).json({ msg: 'Error in saving url to database' });    
+            }
+            else {
+              res.json({
+                msg: "Successfully uploaded file to cloudinary", 
+                url: result.url
+              });
+            }
+          })
+        }
       });
     }    
   })

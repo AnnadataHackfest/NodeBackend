@@ -28,7 +28,11 @@ const UserSchema = new Schema({
   verified: {
     type: Boolean,
     default: false
-  }
+  },
+  uploadedFiles: [{ 
+    type : mongoose.Schema.Types.ObjectId, 
+    ref: 'File' 
+  }],
 
 });
 
