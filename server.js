@@ -32,6 +32,7 @@ app.use('/api/upload', require('./routes/api/upload'));
 app.use('/api/ambeedata', require('./routes/api/ambeedata'));
 
 app.use('/api/questions', require('./routes/api/questions'));
+app.use('/api/infos', require('./routes/api/infos'));
 
 // serve static assets if we are in production
 if(process.env.NODE_ENV === 'production'){
