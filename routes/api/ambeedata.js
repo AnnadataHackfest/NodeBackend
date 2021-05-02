@@ -18,7 +18,9 @@ const AmbeedataApiKey = process.env.AMBEEDATA_API_KEY;
 
 // Sample Request Url: localhost:5000/api/ambeedata/soil?lat=28.68&lng=77.22
 router.get('/soil', (req, res) => {
-  const { lat, lng } = req.query;
+  console.log(req.lat);
+  const lat = req.lat;
+  const lng = req.lng;
   console.log("latitude ", lat);
   console.log("longitude ", lng);
   const url = `${AmbeedataApiBaseUrl}${soilLatest}?lat=${lat}&lng=${lng}`;
