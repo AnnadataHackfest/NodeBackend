@@ -1,7 +1,8 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
+
 const router = express.Router();
-const auth = require("../../middleware/auth");
+const auth = require('../../middleware/auth');
 const { randomString } = require('../../utils/utility');
 const User = require('../../models/User');
 
@@ -9,27 +10,27 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 
-var OTP_List = [];
+let otpList = [];
 
 // Remove expired OTP from OPT_List
 const removeExpiredOTP = () => {
-  let temp = OTP_List.filter((item) => {
+  const temp = otpList.filter((item) => {
     const current = new Date();
     // Remove OTP expired 10 minutes ago
-    return ((current.getTime() - item.generatedTime)  < 1000*60*10)
+    return current.getTime() - item.generatedTime < 1000 * 60 * 10;
   });
-  OTP_List = temp;
+  otpList = temp;
 };
 
 // Remove used OTP from OPT_List
 const removeUsedOTP = (OTP) => {
-  let temp = OTP_List.filter((item) => item.OTP !== OTP.OTP);
-  OTP_List = temp;
+  const temp = otpList.filter((item) => item.OTP !== OTP.OTP);
+  otpList = temp;
 };
 
-// find OTP in OTP_List
+// find OTP in otpList
 const findOTP = (givenOTP) => {
-  let obj = OTP_List.find((o, i) => {
+  const obj = otpList.find((o, i) => {
     if (o.OTP === givenOTP.OTP) {
       return true; // stop searching
     }
@@ -37,62 +38,63 @@ const findOTP = (givenOTP) => {
   if (obj === null || obj === undefined) {
     return false;
   }
-  else {
-    return true;
-  }
-}
+
+  return true;
+};
 
 // Get OTP via SMS
 router.post('/sms', (req, res) => {
+  removeExpiredOTP();
   const { phone } = req.body;
   const rstring = randomString(10);
   const d = new Date();
-  var otp = {
+  const otp = {
     OTP: rstring,
-    generatedTime: d.getTime()
+    generatedTime: d.getTime(),
   };
-  OTP_List.push(otp);
+  otpList.push(otp);
   client.messages
-  .create({
-     body: `Welcome to Annadata. Your OTP is ${otp.OTP}`,
-     from: '+14246257905',
-     to: phone
-   })
-  .then(message => {
-    console.log(message.sid);
-    res.json({msg: 'Successfully sent OTP'});
-  })
-  .catch(error => {
-    console.log('Error occured in Twilio Api ', error);
-    removeUsedOTP(otp);
-    res.status(400).json({ msg: 'An error occured' });
-  });
+    .create({
+      body: `Welcome to Annadata. Your OTP is ${otp.OTP}`,
+      from: '+14246257905',
+      to: phone,
+    })
+    .then((message) => {
+      console.log(message.sid);
+      res.json({ msg: 'Successfully sent OTP' });
+    })
+    .catch((error) => {
+      console.log('Error occured in Twilio Api ', error);
+      removeUsedOTP(otp);
+      res.status(400).json({ msg: 'An error occured' });
+    });
 });
 
 // Get OTP via email
 router.post('/email', (req, res) => {
-  const email = req.body.email;
-  console.log("email ", email)
+  removeExpiredOTP();
+  const { email } = req.body;
+  console.log('email ', email);
   const rstring = randomString(10);
   const d = new Date();
-  var otp = {
+  const otp = {
     OTP: rstring,
-    generatedTime: d.getTime()
+    generatedTime: d.getTime(),
   };
-  OTP_List.push(otp);
+  otpList.push(otp);
 
-  const sendor_email = process.env.GMAIL_ID;
-  const sendor_password = process.env.GMAIL_PASSWORD;
+  const sendorEmail = process.env.GMAIL_ID;
+  const sendorPassword = process.env.GMAIL_PASSWORD;
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: sendor_email,
-      pass: sendor_password,
+      user: sendorEmail,
+      pass: sendorPassword,
     },
   });
   const emailmessage = `Welcome to Annadata.Your OTP is ${otp.OTP}`;
   const mailOptions = {
-    from: sendor_email,
+    from: sendorEmail,
     to: email,
     subject: 'Annadata OTP Verification',
     text: emailmessage,
@@ -100,12 +102,11 @@ router.post('/email', (req, res) => {
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.log("Error occured in sending email ", error);
+      console.log('Error occured in sending email ', error);
       res.status(400).json({ msg: 'An error occured' });
-    }
-    else {
+    } else {
       console.log('Email sent ', info);
-      res.json({msg: 'Successfully sent OTP'});
+      res.json({ msg: 'Successfully sent OTP' });
     }
   });
 });
@@ -114,7 +115,7 @@ router.post('/email', (req, res) => {
 router.post('/verify', auth, (req, res) => {
   const { OTP } = req.body;
   // Simple validation
-  if(!OTP) {
+  if (!OTP) {
     return res.status(400).json({ msg: 'Please enter valid OTP' });
   }
   if (findOTP(OTP)) {
@@ -134,11 +135,10 @@ router.post('/verify', auth, (req, res) => {
           });
         }
         removeUsedOTP(OTP);
-        return res.json({ msg: 'Successfully verified OTP'});
+        return res.json({ msg: 'Successfully verified OTP' });
       });
     });
-  }
-  else {
+  } else {
     return res.status(400).json({ msg: 'Invalid OTP' });
   }
 });

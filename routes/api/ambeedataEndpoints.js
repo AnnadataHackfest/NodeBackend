@@ -15,5 +15,5 @@ module.exports = {
   waterVapourLatest,
   airQualityLatestGeospatial,
   airQualityLatestPostalCode,
-  weatherLatest
-}
+  weatherLatest,
+};

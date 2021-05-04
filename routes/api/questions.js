@@ -1,25 +1,25 @@
 const express = require('express');
+
 const router = express.Router();
-const auth = require("../../middleware/auth");
+const auth = require('../../middleware/auth');
 
 // item model
 const Question = require('../../models/Question');
 
 router.get('/', (req, res) => {
-    Question.find()
-     .sort({ date: -1 })
-     .then(questions => res.json(questions))
+  Question.find()
+    .sort({ date: -1 })
+    .then((questions) => res.json(questions));
 });
 
 router.post('/', auth, (req, res) => {
-    const newQuestion = new Question({
-        question: req.body.question,
-        name: req.body.name,
-        phone: req.body.phone
-    });
+  const newQuestion = new Question({
+    question: req.body.question,
+    name: req.body.name,
+    phone: req.body.phone,
+  });
 
-    newQuestion.save()
-     .then(question => res.json(question));
+  newQuestion.save().then((question) => res.json(question));
 });
 
 // router.delete('/:id', auth,  (req, res) => {

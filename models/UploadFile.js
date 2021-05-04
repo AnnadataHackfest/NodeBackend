@@ -1,17 +1,16 @@
 const mongoose = require('mongoose');
- 
+
 const UploadFileSchema = new mongoose.Schema({
   fileUrl: {
-    type:  String,
+    type: String,
     trim: true,
-    default: ''      
+    default: '',
   },
   created_date: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
 });
 
 const UploadFile = mongoose.model('UploadFile', UploadFileSchema);
 module.exports = UploadFile;
-
